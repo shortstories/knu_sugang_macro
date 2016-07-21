@@ -1,0 +1,21 @@
+{
+  "name": "knu-macro",
+  "description": "knu sugang macro",
+  "author": "ohchang",
+  "version": "0.0.1",
+  "main": "src/main.js",
+  "devDependencies": {
+    "electron-builder": ">= 5.15.0",
+    "electron-prebuilt": ">= 1.2.8"
+  },
+  "build": {
+    "appId": "shortstories",
+    "app-category-type": "utils"
+  },
+  "scripts": {
+    "postinstall": "install-app-deps",
+    "pack": "build --dir",
+    "dist": "build",
+    "start": "electron ."
+  }
+}
