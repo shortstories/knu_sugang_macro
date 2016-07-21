@@ -4,6 +4,10 @@
   "author": "ohchang",
   "version": "0.0.1",
   "main": "src/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shortstories/knu_sugang_macro"
+  },
   "devDependencies": {
     "electron-builder": ">= 5.15.0",
     "electron-prebuilt": ">= 1.2.8"
