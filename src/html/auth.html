@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div class="wrap_login">
+      <label>ID: <input id="knu_id" type="text" name="knu_id" /></label>
+      <label>Passwd: <input id="knu_passwd" type="password" name="knu_passwd" /></label>
+      <label>학번: <input id="knu_stu_number" type="text" name="knu_stu_number" /></label>
+      <input id="btn_login" value="자동 로그인" type="submit" name="knu_submit" />
+    </div>
+    <script>
+      window.$ = window.jQuery = require('jquery');
+      const ipc = require('electron').ipcRenderer;
+      $("#btn_login").on("click", (e) => {
+        ipc.send("startLogin", {
+          "id": $("#knu_id").val(),
+          "password": $("#knu_passwd").val(),
+          "stu_number": $("#knu_stu_number").val()
+        });
+
+        ipc.once("postLogin", (event, data) => {
+          console.log(data);
+          if (data.error) {
+            alert(data.error);
+            return;
+          }
+
+          // alert(response);
+        });
+      });
+    </script>
+  </body>
+</html>
