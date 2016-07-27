@@ -1,0 +1,56 @@
+body {
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 5px;
+}
+
+#metadata {
+}
+
+#metadata > div {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.5em;
+  text-align: center;
+}
+
+#controllers_wrap {
+}
+
+#btn_add_controller {
+  width: 100%;
+}
+
+.controller {
+  height: 40px;
+  padding: 7px 0;
+}
+
+.controller > * {
+  height: 100%;
+  font-size: 0.6em
+}
+
+.sugang_id {
+}
+
+.sugang_type {
+}
+
+.req_interval {
+}
+
+.try_number {
+  color: #B6B7D0;
+  text-align: center;
+  line-height: 25px;
+}
+.result {
+  color: #B6B7D0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 25px;
+}
+
+.controller > .btn {
+  line-height: 15px;
+}

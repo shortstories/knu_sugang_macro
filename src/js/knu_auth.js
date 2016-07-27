@@ -70,3 +70,7 @@ KnuAuth.prototype.login = function(loginCallback) {
 KnuAuth.prototype.getCookie = function() {
   return this.cookieJar.getCookies("http://my.knu.ac.kr", {allPaths: true});
 };
+
+KnuAuth.prototype.getCookieJar = function() {
+  return this.cookieJar;
+};

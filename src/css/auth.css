@@ -1,0 +1,16 @@
+body {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+* {
+  color: white;
+}
+
+.wrap_login {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+#btn_login {
+  width: 100%;
+}

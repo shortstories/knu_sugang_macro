@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../lib/bootstrap-3.3.6-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../lib/bootstrap-3.3.6-dist/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="../css/sugang.css" />
+  </head>
+  <body>
+    <div id='controllers_wrap' class="container-fluid">
+      <div id='metadata' class="row">
+        <div class="col-xs-2">강의코드</div>
+        <div class="col-xs-2">강의유형</div>
+        <div class="col-xs-2">시도간격</div>
+        <div class="col-xs-2">시도횟수</div>
+        <div class="col-xs-3">결과</div>
+        <div class="col-xs-1"></div>
+      </div>
+    </div>
+    <a id='btn_add_controller' class="btn btn-primary">+</a>
+    <script>
+      window.$ = window.jQuery = require('jquery');
+      const {ipcRenderer} = require('electron');
+      let controllerCount = 0;
+      let controllerList = [];
+
+      function createController() {
+        let $controller = $(
+          "<div class='controller row'>" +
+            "<input type='text' class='sugang_id col-xs-2' placeholder='COMP328002'/>" +
+            "<input type='text' class='sugang_type col-xs-2' placeholder='전공'/>" +
+            "<input type='text' class='req_interval col-xs-2' placeholder='0.1' />" +
+            "<div class='try_number col-xs-2'>0</div>" +
+            "<div class='result col-xs-3'></div> " +
+            "<a class='btn_start btn btn-success col-xs-1'>▶︎</a>" +
+            "<a class='btn_stop btn btn-danger col-xs-1' style='display: none;'>X</a>" +
+          "</div>");
+
+        $controller.data("index", controllerCount);
+        controllerList[controllerCount] = $controller;
+
+        controllerCount += 1;
+
+        return $controller;
+      }
+
+      function appendController() {
+        $("#controllers_wrap").append(createController());
+      }
+
+      function startMacro(e) {
+        let $controller = $(this).closest(".controller");
+        let index = $controller.data("index");
+
+        let $sugangId = $controller.find(".sugang_id")
+          .prop('disabled', true);
+        let $sugangType = $controller.find(".sugang_type")
+          .prop('disabled', true);
+        let $reqInterval = $controller.find(".req_interval")
+          .prop('disabled', true);
+
+        let data = {
+          "index": index,
+          "lectureCode": $sugangId.val(),
+          "lectureType": $sugangType.val(),
+          "intervalSecond": $reqInterval.val()
+        };
+
+        if (!data.lectureCode || !data.lectureType || !data.intervalSecond) {
+          alert("강의 코드, 유형, 간격을 빠짐없이 입력하시오.");
+          return;
+        }
+
+        ipcRenderer.send("startMacro", data);
+
+        $(this).hide();
+        $controller.find(".btn_stop").show();
+      }
+
+      function stopMacro(e) {
+        let $controller = $(this).closest(".controller");
+        let index = $controller.data("index");
+
+        let $sugangId = $controller.find(".sugang_id")
+          .prop('disabled', false);
+        let $sugangType = $controller.find(".sugang_type")
+          .prop('disabled', false);
+        let $reqInterval = $controller.find(".req_interval")
+          .prop('disabled', false);
+
+        ipcRenderer.send("stopMacro", {
+          "index": index
+        })
+
+        $(this).hide();
+        $controller.find(".btn_start").show();
+      }
+
+      $(document).ready(function() {
+        appendController();
+        $("#btn_add_controller").on("click", appendController);
+        $("#controllers_wrap")
+          .on("click.startMacro", ".btn_start", startMacro);
+        $("#controllers_wrap")
+          .on("click.stopMacro", ".btn_stop", stopMacro);
+
+        ipcRenderer.on("macroResult", (event, data) => {
+          let $controller = controllerList[data.index];
+          let $tryNumber = $controller.find(".try_number");
+          let $result = $controller.find(".result");
+
+          $tryNumber.html(data.tryNumber);
+          $result.html(data.result);
+        });
+      });
+    </script>
+    <script src="../lib/bootstrap-3.3.6-dist/js/bootstrap.js" ></script>
+  </body>
+</html>

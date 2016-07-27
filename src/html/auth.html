@@ -2,18 +2,34 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="../lib/bootstrap-3.3.6-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../lib/bootstrap-3.3.6-dist/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="../css/auth.css" />
   </head>
   <body>
-    <div class="wrap_login">
-      <label>ID: <input id="knu_id" type="text" name="knu_id" /></label>
-      <label>Passwd: <input id="knu_passwd" type="password" name="knu_passwd" /></label>
-      <label>학번: <input id="knu_stu_number" type="text" name="knu_stu_number" /></label>
-      <input id="btn_login" value="자동 로그인" type="submit" name="knu_submit" />
+    <div class="wrap_login container-fluid">
+      <form>
+        <div class="form-group">
+          <label for="knu_id">ID</label>
+          <input id="knu_id" class="form-control" type="text" name="knu_id" />
+        </div>
+        <div class="form-group">
+          <label for="knu_passwd">Passwd</label>
+          <input id="knu_passwd" class="form-control" type="password" name="knu_passwd" />
+        </div>
+        <div class="form-group">
+          <label for="knu_stu_number">학번</label>
+          <input id="knu_stu_number" class="form-control" type="text" name="knu_stu_number" />
+        </div>
+        <input class="btn btn-primary" class="form-control" id="btn_login" value="자동 로그인" type="submit" name="knu_submit" />
+      </form>
     </div>
     <script>
       window.$ = window.jQuery = require('jquery');
       const ipc = require('electron').ipcRenderer;
       $("#btn_login").on("click", (e) => {
+        e.preventDefault();
+
         ipc.send("startLogin", {
           "id": $("#knu_id").val(),
           "password": $("#knu_passwd").val(),
@@ -31,5 +47,6 @@
         });
       });
     </script>
+    <script src="../lib/bootstrap-3.3.6-dist/js/bootstrap.js" ></script>
   </body>
 </html>
