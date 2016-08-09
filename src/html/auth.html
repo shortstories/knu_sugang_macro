@@ -36,7 +36,7 @@
           "stu_number": $("#knu_stu_number").val()
         });
 
-        ipc.once("postLogin", (event, data) => {
+        ipc.on("postLogin", (event, data) => {
           console.log(data);
           if (data.error) {
             alert(data.error);
