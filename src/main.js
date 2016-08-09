@@ -16,7 +16,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
-    // resizable: false
+    resizable: true
   });
   loginChild = new BrowserWindow({
     width: 300,
@@ -26,7 +26,7 @@ function createWindow() {
     transparent: true,
     x: 740,
     y: 320,
-    // resizable: false
+    resizable: true
   });
   sugangChild = new BrowserWindow({
     width: 500,
@@ -36,7 +36,7 @@ function createWindow() {
     transparent: true,
     x: 240,
     y: 120,
-    // resizable: false
+    resizable: true
   });
 
   // win.loadURL(`file://${__dirname}/html/index.html`);
