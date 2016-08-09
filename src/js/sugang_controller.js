@@ -86,6 +86,4 @@ var SugangController = function() {
   // };
 }();
 
-// SugangController.prototype = EventEmitter;
-console.log(SugangController.on);
 exports = module.exports = SugangController;
