@@ -11,6 +11,7 @@ let sugangChild;
 let loginDataCache;
 let currentKnuAuth;
 let isLogin = false;
+let sessionTimeoutKey;
 
 function createWindow() {
   win = new BrowserWindow({
@@ -124,6 +125,12 @@ var onStartLogin = function(event, data) {
     SugangController.setCookieJarToAllMacro(currentKnuAuth.getCookieJar());
     win.loadURL("http://sugang.knu.ac.kr/Sugang/cour/lectReq/onlineLectReq/list.action");
     isLogin = true;
+
+    if (sessionTimeoutKey) {
+      clearTimeout(sessionTimeoutKey);
+    }
+
+    sessionTimeoutKey = setTimeout(onStartLogin, 1000000);
   });
 
   if (event) {
