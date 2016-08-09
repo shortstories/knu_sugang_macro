@@ -2,7 +2,6 @@
 
 const KnuMacro = require("./macro_advanced.js");
 const EventEmitter = require("events");
-const util = require("util");
 
 var SugangController = function() {
   // fields
@@ -76,14 +75,6 @@ var SugangController = function() {
   returnConstructor.prototype = EventEmitter.prototype;
 
   return new returnConstructor();
-
-  // return {
-  //   init: init,
-  //   setCookieJarToAllMacro: setCookieJarToAllMacro,
-  //   startMacroEvent: startMacroEvent,
-  //   stopMacroEvent: stopMacroEvent,
-  //   logoutEvent: logoutEvent
-  // };
 }();
 
 exports = module.exports = SugangController;

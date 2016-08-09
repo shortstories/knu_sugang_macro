@@ -9,6 +9,16 @@
   <body>
     <div class="wrap_login container-fluid">
       <form>
+        <div class="form-group row">
+          <div class="col-xs-4">
+            <input id="knu_year" class="form-control" type="text" name="knu_year" placeholder="2016" />
+          </div>
+          <label for="knu_year" class="col-xs-1">년</label>
+          <div class="col-xs-3">
+            <input id="knu_semester" class="form-control" type="text" name="knu_semester" placeholder="2" />
+          </div>
+          <label for="knu_semester" class="col-xs-3">학기</label>
+        </div>
         <div class="form-group">
           <label for="knu_id">ID</label>
           <input id="knu_id" class="form-control" type="text" name="knu_id" />
@@ -33,7 +43,8 @@
         ipc.send("startLogin", {
           "id": $("#knu_id").val(),
           "password": $("#knu_passwd").val(),
-          "stu_number": $("#knu_stu_number").val()
+          "stu_number": $("#knu_stu_number").val(),
+          "open_yr" : $("#knu_year").val() + $("#knu_semester").val()
         });
 
         ipc.on("postLogin", (event, data) => {
@@ -42,8 +53,6 @@
             alert(data.error);
             return;
           }
-
-          // alert(response);
         });
       });
     </script>

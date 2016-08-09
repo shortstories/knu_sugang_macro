@@ -67,8 +67,6 @@ app.on('activate', () => {
 });
 
 var onStartLogin = function(event, data) {
-  isLogin = true;
-
   console.log("start Login");
   console.log(data);
 
@@ -78,17 +76,17 @@ var onStartLogin = function(event, data) {
     loginDataCache = data;
   }
 
-  if (!data || !data.id || !data.password || !data.stu_number) {
+  if (!data || !data.id || !data.password || !data.stu_number || !data.open_yr) {
     if (event) {
       event.sender.send("postLogin", {
-        error: "아이디, 비밀번호, 학번을 모두 입력하세요.",
+        error: "학기, 아이디, 비밀번호, 학번을 모두 입력하세요.",
         response: null
       });
     }
     return;
   }
 
-  currentKnuAuth = new KnuAuth(data.id, data.password, data.stu_number);
+  currentKnuAuth = new KnuAuth(data.id, data.password, data.stu_number, data.open_yr);
   currentKnuAuth.login((err, response, body) => {
     if (err) {
       console.log(err);
@@ -119,11 +117,13 @@ var onStartLogin = function(event, data) {
         "expirationDate": cookie.expires
       };
 
+      // console.log(details);
       winSession.cookies.set(details, setCallback);
     }
 
     SugangController.setCookieJarToAllMacro(currentKnuAuth.getCookieJar());
-    win.loadURL("http://sugang.knu.ac.kr");
+    win.loadURL("http://sugang.knu.ac.kr/Sugang/cour/lectReq/onlineLectReq/list.action");
+    isLogin = true;
   });
 
   if (event) {
