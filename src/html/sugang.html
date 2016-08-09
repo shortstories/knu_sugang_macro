@@ -51,13 +51,9 @@
       function startMacro(e) {
         let $controller = $(this).closest(".controller");
         let index = $controller.data("index");
-
-        let $sugangId = $controller.find(".sugang_id")
-          .prop('disabled', true);
-        let $sugangType = $controller.find(".sugang_type")
-          .prop('disabled', true);
-        let $reqInterval = $controller.find(".req_interval")
-          .prop('disabled', true);
+        let $sugangId = $controller.find(".sugang_id");
+        let $sugangType = $controller.find(".sugang_type");
+        let $reqInterval = $controller.find(".req_interval");
 
         let data = {
           "index": index,
@@ -70,6 +66,10 @@
           alert("강의 코드, 유형, 간격을 빠짐없이 입력하시오.");
           return;
         }
+
+        $sugangId.prop('disabled', true);
+        $sugangType.prop('disabled', true);
+        $reqInterval.prop('disabled', true);
 
         ipcRenderer.send("startMacro", data);
 

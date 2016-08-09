@@ -66,7 +66,9 @@ function SugangMacro() {
   };
 
   Macro.prototype.setCookieJar = function(cookieJar) {
-    this.cookieJar = cookieJar;
+    if (cookieJar) {
+      this.cookieJar = cookieJar;
+    }
   }
 
   Macro.prototype.startInterval = function() {

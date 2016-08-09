@@ -2,7 +2,7 @@
 const electron = require('electron');
 const {app, ipcMain, BrowserWindow} = electron;
 const KnuAuth = require("./js/knu_auth.js");
-const KnuMacro = require("./js/macro_advanced");
+const SugangController = require("./js/sugang_controller.js");
 
 let win;
 let winSession;
@@ -10,36 +10,37 @@ let loginChild;
 let sugangChild;
 let loginDataCache;
 let currentKnuAuth;
+let isLogin = false;
 
 function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
-    resizable: false
+    // resizable: false
   });
   loginChild = new BrowserWindow({
     width: 300,
     height: 300,
-    frame: false,
+    // frame: false,
     parent: win,
     transparent: true,
     x: 740,
     y: 370,
-    resizable: false
+    // resizable: false
   });
   sugangChild = new BrowserWindow({
     width: 500,
     height: 550,
-    frame: false,
+    // frame: false,
     parent: win,
     transparent: true,
     x: 240,
     y: 120,
-    resizable: false
+    // resizable: false
   });
 
   // win.loadURL(`file://${__dirname}/html/index.html`);
-  // win.loadURL("http://my.knu.ac.kr");
+  win.loadURL("http://sugang.knu.ac.kr");
   winSession = win.webContents.session;
   // win.openDevTools(["detach"]);
   loginChild.loadURL(`file://${__dirname}/html/auth.html`);
@@ -65,7 +66,9 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on("startLogin", (event, data) => {
+var onStartLogin = function(event, data) {
+  isLogin = true;
+
   console.log("start Login");
   console.log(data);
 
@@ -76,11 +79,12 @@ ipcMain.on("startLogin", (event, data) => {
   }
 
   if (!data || !data.id || !data.password || !data.stu_number) {
-    event.sender.send("postLogin", {
-      error: "아이디, 비밀번호, 학번을 모두 입력하세요.",
-      response: null
-    });
-
+    if (event) {
+      event.sender.send("postLogin", {
+        error: "아이디, 비밀번호, 학번을 모두 입력하세요.",
+        response: null
+      });
+    }
     return;
   }
 
@@ -105,10 +109,10 @@ ipcMain.on("startLogin", (event, data) => {
     for (let i = 0; i < cookies.length; i++) {
       var cookie = cookies[i];
       var details = {
-        "url" : "http://my.knu.ac.kr",
+        "url" : "http://sugang.knu.ac.kr",
         "name": cookie.key,
         "value": cookie.value,
-        "domain": (cookie.domain === "my.knu.ac.kr") ? null : cookie.domain,
+        "domain": (cookie.domain === "sugang.knu.ac.kr") ? null : cookie.domain,
         "path": cookie.path,
         "secure": cookie.secure,
         "httpOnly": cookie.httpOnly,
@@ -118,47 +122,24 @@ ipcMain.on("startLogin", (event, data) => {
       winSession.cookies.set(details, setCallback);
     }
 
-    for (var key in macroMap) {
-      if (macroMap.hasOwnProperty(key)) {
-        var macro = macroMap[key];
-        macro.setCookieJar(currentKnuAuth.getCookieJar());
-      }
-    }
-
-    // win.loadURL("http://my.knu.ac.kr");
+    SugangController.setCookieJarToAllMacro(currentKnuAuth.getCookieJar());
+    win.loadURL("http://sugang.knu.ac.kr");
   });
 
-  event.sender.send("postLogin", {
-    error: null,
-    response: "test"
-  });
-});
-
-let macroMap = {};
-
-ipcMain.on("startMacro", (event, data) => {
-  console.log(data);
-
-  var macro = new KnuMacro.Macro(data.lectureCode,
-    data.lectureType, data.intervalSecond,
-    (err, response, body) => {
-      console.log(response);
-
-      event.sender.send("macroResult", {
-        "index": data.index,
-        "tryNumber": macro.tryNum,
-        "result": (err) ? err : body
-      });
+  if (event) {
+    event.sender.send("postLogin", {
+      error: null,
+      response: "test"
     });
-
-  if (currentKnuAuth) {
-    macro.setCookieJar(currentKnuAuth.getCookieJar());
   }
-  macro.startInterval();
-  macroMap[data.index] = macro;
-});
+};
 
-ipcMain.on("stopMacro", (event, data) => {
-  console.log(data);
-  macroMap[data.index].stop();
+ipcMain.on("startLogin", onStartLogin);
+
+SugangController.init(ipcMain);
+SugangController.on(SugangController.logoutEvent, () => {
+  console.log("on logout event");
+  if (isLogin) {
+    onStartLogin();
+  }
 });
