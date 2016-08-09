@@ -20,12 +20,12 @@ function createWindow() {
   });
   loginChild = new BrowserWindow({
     width: 300,
-    height: 300,
+    height: 350,
     // frame: false,
     parent: win,
     transparent: true,
     x: 740,
-    y: 370,
+    y: 320,
     // resizable: false
   });
   sugangChild = new BrowserWindow({
